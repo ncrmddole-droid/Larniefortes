@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Project detail — Larnie Fortes Batolina Portfolio">
+    <title>Project Detail — Larnie Fortes Batolina</title>
+    <link rel="stylesheet" href="port.css">
+    <script src="portfolio.js" defer></script>
+    <style>
+        /* ── Project Detail Page ── */
+        .project-detail-section {
+            padding: 100px 0 60px;
+            min-height: 100vh;
+        }
+
+        .project-detail-section .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .project-detail-title {
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            color: var(--text-primary, #f0f0f0);
+            letter-spacing: -0.5px;
+        }
+
+        .project-detail-subtitle {
+            text-align: center;
+            color: var(--text-secondary, #aaa);
+            font-size: 0.95rem;
+            margin-bottom: 40px;
+        }
+
+        /* Stacked images — full-width like the reference */
+        .image-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .image-stack-item {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 4px;
+            background: #111;
+        }
+
+        .image-stack-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .image-stack-item img:hover {
+            transform: scale(1.02);
+        }
+
+        /* Back button */
+        .back-btn-wrap {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: 100px;
+            background: transparent;
+            border: 1.5px solid var(--accent, #e85d75);
+            color: var(--accent, #e85d75);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        .back-btn:hover {
+            background: var(--accent, #e85d75);
+            color: #fff;
+        }
+
+        /* Loading / error state */
+        #detail-status {
+            text-align: center;
+            color: var(--text-secondary, #aaa);
+            padding: 40px 0;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <a href="index.html" class="logo">Larnie Fortes Batolina</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Featured</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Detail Content -->
+    <section class="project-detail-section">
+        <div class="container">
+
+            <!-- Back button -->
+            <div class="back-btn-wrap">
+                <a href="javascript:history.back()" class="back-btn">
+                    ← Back
+                </a>
+            </div>
+
+            <!-- Title (set by JS) -->
+            <h1 class="project-detail-title" id="detail-title">Project</h1>
+            <p class="project-detail-subtitle" id="detail-subtitle"></p>
+
+            <!-- Image stack (populated by JS) -->
+            <div class="image-stack" id="image-stack">
+                <p id="detail-status">Loading images…</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2026 Larnie Fortes Batolina. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // ── Project data ─────────────────────────────────────────────────
+        const projects = {
+            1: {
+                title: "Project 1",
+                subtitle: "",
+                images: [
+                    "images/1/1.jfif",
+                    "images/1/16cbf1e8-718e-48db-98b2-10b742179f88.jfif"
+                ]
+            },
+            2: {
+                title: "Project 2",
+                subtitle: "",
+                images: [
+                    "images/2/1.jfif",
+                    "images/2/2.jfif",
+                    "images/2/3.jfif",
+                    "images/2/4.jfif"
+                ]
+            }
+        };
+
+        // ── Read ?project= from URL ───────────────────────────────────────
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("project");
+        const project = projects[id];
+
+        const titleEl = document.getElementById("detail-title");
+        const subtitleEl = document.getElementById("detail-subtitle");
+        const stackEl = document.getElementById("image-stack");
+        const statusEl = document.getElementById("detail-status");
+
+        if (project) {
+            // Set title & subtitle
+            titleEl.textContent = project.title;
+            subtitleEl.textContent = project.subtitle;
+            document.title = project.title + " — Larnie Fortes Batolina";
+
+            // Clear loading text
+            stackEl.innerHTML = "";
+
+            // Build stacked images
+            project.images.forEach((src, i) => {
+                const div = document.createElement("div");
+                div.className = "image-stack-item";
+
+                const img = document.createElement("img");
+                img.src = src;
+                img.alt = project.title + " — image " + (i + 1);
+                img.loading = "lazy";
+
+                div.appendChild(img);
+                stackEl.appendChild(div);
+            });
+        } else {
+            titleEl.textContent = "Project not found";
+            subtitleEl.textContent = "Please go back and select a project.";
+            statusEl.textContent = "";
+        }
+    </script>
+
+</body>
+
+</html>
